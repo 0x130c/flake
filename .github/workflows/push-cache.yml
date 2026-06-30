@@ -16,7 +16,7 @@ jobs:
   push-cache:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: DeterminateSystems/nix-installer-action@main
       - name: Use 0x130c cache
         run: nix run nixpkgs#cachix -- use 0x130c
