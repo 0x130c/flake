@@ -1,0 +1,31 @@
+name: build
+
+# Build helix-unwrapped + helix on every push and PR (and on manual request).
+# This NEVER pushes to the cache — populating the 0x130c cache is a deliberate
+# manual action, see push-cache.yml. The cache is configured as a substituter so
+# anything already built is pulled instead of recompiled.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: Use 0x130c cache (substituter, for fast pulls)
+        run: nix run nixpkgs#cachix -- use 0x130c
+        env:
+          CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - name: Build
+        run: |
+          nix build .#helix-unwrapped --out-link result-unwrapped --print-build-logs
+          nix build .#helix           --out-link result-helix     --print-build-logs

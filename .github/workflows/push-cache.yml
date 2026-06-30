@@ -1,0 +1,34 @@
+name: push-cache
+
+# Manual only. Builds helix-unwrapped + helix from the current flake.lock and
+# pushes ONLY their runtime closures to the 0x130c cachix cache (so cargo vendor
+# dirs and the rust toolchain never land in the cache). Run this when you want to
+# refresh the cache — e.g. after merging a change or an `update` bump.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  push-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: Use 0x130c cache
+        run: nix run nixpkgs#cachix -- use 0x130c
+        env:
+          CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - name: Build
+        run: |
+          nix build .#helix-unwrapped --out-link result-unwrapped --print-build-logs
+          nix build .#helix           --out-link result-helix     --print-build-logs
+      - name: Push runtime closures
+        env:
+          CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        run: |
+          nix path-info -r ./result-unwrapped ./result-helix \
+            | nix run nixpkgs#cachix -- push 0x130c
