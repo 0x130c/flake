@@ -47,15 +47,30 @@ your closure) to the languages actually in use. Edit the file to change the set;
 builds and caches exactly that. Helix's own `use-grammars.except` (currently `wren`,
 `gemini`) is applied first, so those never build regardless.
 
+## CI workflows
+
+Three separate workflows, each with one job:
+
+| Workflow | Triggers | Does | Pushes cache? |
+|---|---|---|---|
+| `build.yml` | push to `main`, PR, manual | build `helix-unwrapped` + `helix` (validate) | **no** |
+| `push-cache.yml` | **manual only** (`workflow_dispatch`) | build + push runtime closures to `0x130c` | **yes** |
+| `update.yml` | daily cron, manual | bump `helix-src`, build, commit lock on success | **no** |
+
+Cache is populated **only by manually running `push-cache`** — nothing pushes
+automatically. Typical flow: merge a change (or let `update` bump the lock), then run
+`push-cache` from the Actions tab to refresh the cache.
+
+`push-cache` pushes only the **runtime closure** of the outputs (`nix path-info -r … |
+cachix push`), so cargo vendor dirs and the rust toolchain are never cached.
+
 ## Bumping helix
 
-`nix flake update helix-src`. CI also does this daily and commits the new lock **only if
-the build succeeds**, so a broken master never reaches consumers.
+`nix flake update helix-src` locally, or run `update` (daily cron / manual) which bumps
+and commits the new lock **only if the build succeeds**. Then run `push-cache` to cache
+the new revision.
 
-## CI / cache setup (one-time)
+## One-time setup
 
 - Repo secret `CACHIX_AUTH_TOKEN` (a write token for the `0x130c` cache).
-- The public key is already pinned in `flake.nix` `nixConfig`.
-
-CI pushes only the **runtime closure** of the outputs (`nix path-info -r ... | cachix
-push`), so cargo vendor dirs and the rust toolchain are never cached.
+- The cache's public key is already pinned in `flake.nix` `nixConfig`.
