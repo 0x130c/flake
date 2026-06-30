@@ -1,0 +1,105 @@
+awk                # awk
+bash               # bash, env, pkgbuild
+blueprint          # blueprint
+c                  # c
+c-sharp            # c-sharp
+c3                 # c3
+caddyfile          # caddyfile
+cairo              # cairo
+cmake              # cmake
+comment            # comment
+cpp                # cpp
+css                # css
+csv                # csv
+cython             # cython
+dart               # dart
+diff               # diff
+dockerfile         # dockerfile
+dot                # dot
+eex                # eex
+elixir             # elixir
+embedded-perl      # embedded-perl
+embedded-template  # ejs, erb
+erlang             # erlang
+fish               # fish
+ghostty            # ghostty
+git-config         # git-config
+git-rebase         # git-rebase
+gitattributes      # git-attributes
+gitcommit          # git-commit, git-notes
+gitignore          # git-ignore
+gleam              # gleam
+glsl               # glsl
+gnuplot            # gnuplot
+go                 # go
+graphql            # graphql
+hcl                # docker-bake, hcl, tfvars
+hdl                # hdl
+heex               # heex
+hosts              # hosts
+html               # html, webc
+htmldjango         # htmldjango
+iex                # iex
+ini                # ini, systemd
+ink                # ink
+inko               # inko
+janet-simple       # janet
+java               # java
+javascript         # javascript, jsx
+jinja2             # jinja, nunjucks
+jjdescription      # jjdescription
+jjrevset           # jjrevset
+jjtemplate         # jjtemplate
+jq                 # jq
+jsdoc              # jsdoc
+json               # json, json-ld, jsonc
+json5              # json5
+julia              # julia
+just               # just
+kconfig            # kconfig
+kdl                # kdl
+latex              # latex
+log                # log
+lua                # lua
+lua-format-string  # lua-format-string
+make               # make
+markdown           # markdown, markdown-rustdoc, quarto, rmarkdown
+markdown_inline    # markdown.inline
+mermaid            # mermaid
+nginx              # nginx
+nix                # nix
+nu                 # nu
+passwd             # passwd
+pem                # pem
+po                 # po
+powershell         # powershell
+properties         # properties
+proto              # protobuf
+pug                # pug
+python             # python, sage, starlark, tilt
+requirements       # pip-requirements
+robot              # robot
+robots-txt         # robots.txt
+rshtml             # rshtml
+rst                # rst
+rust               # rust, rust-format-args-macro
+rust-format-args   # rust-format-args
+scss               # scss
+sql                # sql
+ssh_client_config  # ssh_client_config
+strace             # strace
+svelte             # svelte
+sway               # sway
+swift              # swift
+templ              # templ
+tera               # tera
+toml               # cross-config, git-cliff-config, jjconfig, miseconfig, toml
+tsx                # tsx
+typescript         # typescript
+vim                # vim
+vue                # vue
+wat                # wat
+wgsl               # wgsl
+xml                # msbuild, xml
+yaml               # docker-compose, github-action, gitlab-ci, nestedtext, woodpecker-ci, yaml
+zig                # zig
