@@ -26,7 +26,7 @@ let
 
   # HELIX_RUNTIME layer: grammars + matching queries from the same master source.
   # Themes/tutor come from helix-unwrapped's HELIX_DEFAULT_RUNTIME; Helix merges both.
-  runtimeDir = runCommand "helix-runtime" { } ''
+  runtime = runCommand "helix-runtime" { } ''
     mkdir -p $out
     ln -s ${grammars} $out/grammars
     cp -r --no-preserve=mode ${helix-src}/runtime/queries $out/queries
@@ -39,11 +39,11 @@ symlinkJoin {
   nativeBuildInputs = [ makeBinaryWrapper ];
 
   postBuild = ''
-    wrapProgram $out/bin/hx --set HELIX_RUNTIME "${runtimeDir}"
+    wrapProgram $out/bin/hx --set HELIX_RUNTIME "${runtime}"
   '';
 
   passthru = {
-    inherit helix-unwrapped grammars runtimeDir;
+    inherit grammars runtime;
     inherit (helix-unwrapped) version;
   };
 
