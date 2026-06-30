@@ -26,9 +26,31 @@
       ...
     }:
     let
+      lib = nixpkgs.lib;
+
+      # The curated grammar set that CI builds and caches: one `[[grammar]].name`
+      # per line in ./grammars-enabled.txt, with `# …` annotations ignored.
+      enabledGrammars =
+        let
+          firstToken =
+            l:
+            let
+              m = builtins.match "[[:space:]]*([^[:space:]#]+).*" l;
+            in
+            if m == null then "" else builtins.head m;
+        in
+        lib.filter (s: s != "") (
+          map firstToken (lib.splitString "\n" (builtins.readFile ./grammars-enabled.txt))
+        );
+
       overlay = final: _prev: {
         helix-unwrapped = final.callPackage ./pkgs/helix-unwrapped.nix { inherit helix-src; };
-        helix = final.callPackage ./pkgs/helix.nix { inherit helix-src; };
+        helix = final.callPackage ./pkgs/helix.nix {
+          inherit helix-src;
+          # Default to the curated set; override with `_: true` for every grammar,
+          # or any other predicate `grammar -> bool`.
+          includeGrammarIf = g: builtins.elem g.name enabledGrammars;
+        };
       };
 
       systems = with flake-utils.lib.system; [ x86_64-linux ];

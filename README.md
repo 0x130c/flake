@@ -21,11 +21,13 @@ the grammar set.
   inputs.helix.url = "github:0x130c/flake";
 
   # in a module / overlay:
-  # pkgs.helix                         # full grammar set (cached)
-  # or trim to just what you need (helix-unwrapped still cache-hits):
+  # pkgs.helix                         # curated grammar set (cached, see below)
+  # or trim further (helix-unwrapped still cache-hits):
   # pkgs.helix.override {
   #   includeGrammarIf = g: builtins.elem g.name [ "rust" "nix" "python" "toml" ];
   # }
+  # or take every grammar helix supports:
+  # pkgs.helix.override { includeGrammarIf = _: true; }
 }
 ```
 
@@ -35,6 +37,15 @@ automatically (Nix will ask to trust the substituter the first time).
 
 `includeGrammarIf` is a predicate `grammar -> bool` where `grammar` is an attrset with
 `.name` (and `.source`), forwarded straight to upstream's `grammars.nix`.
+
+## Grammar set (`grammars-enabled.txt`)
+
+The default `helix` package builds only the grammars listed in
+[`grammars-enabled.txt`](./grammars-enabled.txt) — one `[[grammar]].name` per line, with
+`# …` annotations ignored — instead of all ~290 helix ships. That keeps the cache (and
+your closure) to the languages actually in use. Edit the file to change the set; CI then
+builds and caches exactly that. Helix's own `use-grammars.except` (currently `wren`,
+`gemini`) is applied first, so those never build regardless.
 
 ## Bumping helix
 
